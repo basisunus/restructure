@@ -1,0 +1,15 @@
+<Object>
+	<Value name="size" type="unsigned long" default="0"/>
+	<Value name="display" type="bool" default="true"/>
+	<Value name="threshold" type="double" default="0.0"/>
+	<Value name="position" type="Vec3d" default=""/>
+	<Value name="color" type="Color3d">
+		<v1 v="1.0"/>
+		<v2 v="0.0"/>
+		<v3 v="0.0"/>
+	</Value>
+	<Value name="function" type="ValueSet">
+		<Value name="p1" type="long" default="1"/>
+		<Value name="p2" type="double" default=""/>
+	</Value>
+</Object>
