@@ -6,6 +6,9 @@
 #define FL_VEC2F 1
 
 #include "FLMath.h"
+#include <cstdlib>
+#include <cmath>
+
 
 /** General purpose float pair. Uses include representation of
   * texture coordinates.
