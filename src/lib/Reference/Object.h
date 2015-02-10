@@ -111,7 +111,7 @@ public:
 	virtual bool setValue(const std::string &name, const ValueSet &value);
 
 	/** All the get value functions */
-	virtual bool getValue(const std::string &name, Referenced* value);
+	virtual bool getValue(const std::string &name, Referenced** value);
 	virtual bool getValue(const std::string &name, bool &value);
 	virtual bool getValue(const std::string &name, char &value);
 	virtual bool getValue(const std::string &name, unsigned char &value);

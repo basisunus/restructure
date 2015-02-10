@@ -28,8 +28,8 @@ public:
 
 	virtual const char* className() const { return "Value"; }
 
-	std::string GetName() { return _name; }
-	std::string GetType() { return _type; }
+	std::string getName() { return _name; }
+	std::string getType() { return _type; }
 
 	inline bool operator == (const Value& v) const;
 	inline bool operator != (const Value& v) const;
@@ -164,7 +164,7 @@ public:
 	bool setValue(const std::string &name, const ValueSet &value);
 
 	/** All the get value functions */
-	bool getValue(const std::string &name, Referenced* value);
+	bool getValue(const std::string &name, Referenced** value);
 	bool getValue(const std::string &name, bool &value);
 	bool getValue(const std::string &name, char &value);
 	bool getValue(const std::string &name, unsigned char &value);

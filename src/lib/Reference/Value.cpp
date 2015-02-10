@@ -954,12 +954,12 @@ bool ValueSet::setValue(const std::string &name, const ValueSet &value)
 }
 
 //get value functions
-bool ValueSet::getValue(const std::string &name, Referenced* value)
+bool ValueSet::getValue(const std::string &name, Referenced** value)
 {
 	Value* val = findValue(name);
 	if (val && val->_type=="Referenced*")
 	{
-		value = const_cast<Referenced*>((dynamic_cast< TemplateValue< Referenced * > * >(val))->getValue());
+		*value = const_cast<Referenced*>((dynamic_cast< TemplateValue< Referenced * > * >(val))->getValue());
 		return true;
 	}
 	else

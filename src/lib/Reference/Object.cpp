@@ -27,13 +27,17 @@ Object::~Object()
 //observer functions
 void Object::objectDeleted(void* ptr)
 {
+	Referenced* refd = static_cast<Referenced*>(ptr);
+	if (refd->className() == std::string("Object"))
+		return;
+	//	std::cout << /*static_cast<Object*>(refd)->getId() <<*/ " deleted.\n";
 }
 
 void Object::objectChanged(void* ptr, const std::string &exp)
 {
 	Referenced* refd = static_cast<Referenced*>(ptr);
 	if (refd->className() == std::string("Value"))
-		std::cout << static_cast<Value*>(refd)->GetName() << " changed.\n";
+		std::cout << static_cast<Value*>(refd)->getName() << " changed.\n";
 }
 
 //define function bodies first
@@ -249,7 +253,7 @@ bool Object::setValue(const std::string &name, const ValueSet &value)
 		return false; \
 
 //get functions
-bool Object::getValue(const std::string &name, Referenced* value)
+bool Object::getValue(const std::string &name, Referenced** value)
 { OBJECT_GET_VALUE_BODY }
 
 bool Object::getValue(const std::string &name, bool &value)

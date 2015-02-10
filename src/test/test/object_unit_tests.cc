@@ -40,10 +40,47 @@
 //  //-------------------------------------------------------------------
 #include "Object.h"
 #include "gtest/gtest.h"
+#include <vector>
+
+// for leak test on Windows
+#ifdef WIN32
+#include <vld.h>
+#endif
+
+using namespace std;
+
 // Tests min/max Angles of regular tet
 TEST(Object, Constructor) {
-   Object *o = new Object();
-   ASSERT_EQ(0,o->getId());
-   Object *s = new Object(*o);
-   ASSERT_TRUE(o->getId() == s->getId());
+   Object *obj1 = new Object();
+   vector<ref_ptr<Object>> obj_list;
+   obj_list.push_back(obj1);
+   ASSERT_EQ(1, obj_list.size());
+   ASSERT_TRUE(obj_list[0]->isSameKindAs(obj1));
+   ASSERT_STREQ("Object", obj_list[0]->className());
+   unsigned int id = 10;
+   obj_list[0]->setId(id);
+   ASSERT_EQ(id, obj_list[0]->getId());
+
+   bool bval = false;
+   ASSERT_TRUE(obj_list[0]->addValue("bval", bval));
+   bool bval2;
+   ASSERT_TRUE(obj_list[0]->getValue("bval", bval2));
+   ASSERT_EQ(bval, bval2);
+   bval = true;
+   ASSERT_TRUE(obj_list[0]->setValue("bval", bval));
+   ASSERT_TRUE(obj_list[0]->getValue("bval", bval2));
+   ASSERT_EQ(bval, bval2);
+
+   Object* obj2 = obj_list[0]->clone();
+   obj_list.push_back(obj2);
+   ASSERT_EQ(2, obj_list.size());
+   ASSERT_TRUE(obj_list[1]->getValue("bval", bval2));
+   ASSERT_EQ(bval, bval2);
+   ASSERT_TRUE(obj_list[1]->addValue("friend", obj_list[0].get()));
+   Object* obj;
+   ASSERT_TRUE(obj_list[1]->getValue("friend", (Referenced**)&obj));
+   ASSERT_EQ(obj1, obj);
+   obj_list.erase(obj_list.begin());
+   ASSERT_TRUE(obj_list[0]->getValue("friend", (Referenced**)&obj));
+   ASSERT_EQ(0, obj);
 }
