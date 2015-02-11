@@ -3,13 +3,15 @@
 
 Referenced::Referenced():
   _observerSet(0),
-  _refCount(0)
+  _refCount(0),
+  _refStr("")
 {
 }
 
 Referenced::Referenced(const Referenced&):
   _observerSet(0),
-  _refCount(0)
+  _refCount(0),
+  _refStr("")
 {
 }
 
@@ -34,6 +36,7 @@ ObserverSet* Referenced::getOrCreateObserverSet() const
 void Referenced::addObserver(Observer* observer) const
 {
 	getOrCreateObserverSet()->addObserver(observer);
+	observer->_observees.push_back(const_cast<Referenced*>(this));
 }
 
 void Referenced::removeObserver(Observer* observer) const

@@ -62,8 +62,6 @@ Value* Value::clone()
 		return (dynamic_cast<TemplateValue<HsvColor3f>*>(this))->clone();
 	else if (_type == "HsvColor3d")
 		return (dynamic_cast<TemplateValue<HsvColor3d>*>(this))->clone();
-	else if (_type == "ValueSet")
-		return (dynamic_cast<TemplateValue<ValueSet>*>(this))->clone();
 	else
 		return 0;
 }
@@ -137,6 +135,39 @@ bool ValueSet::removeValue(const std::string &name)
 		return true;
 	else
 		return false;
+}
+
+//reset Referenced pointer to NULL
+bool ValueSet::resetRefPtr(Referenced* value)
+{
+	if (!value) return false;
+	for (Values::iterator it=_values.begin();
+		it!=_values.end(); ++it)
+	{
+		if ((*it)->getType() == "Referenced*" &&
+			(dynamic_cast<TemplateValue<Referenced*>*>((*it).get()))->getValue() == value)
+		{
+			(dynamic_cast<TemplateValue<Referenced*>*>((*it).get()))->setValue(0);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//value sync
+bool ValueSet::syncValue(Value* value)
+{
+	if (!value) return false;
+	for (Values::iterator it=_values.begin();
+		it!=_values.end(); ++it)
+	{
+		if ((*it)->getType() == value->getType() &&
+			(*it)->getName() == value->getName())
+			return (*it)->sync(value);
+	}
+
+	return false;
 }
 
 //add value functions
@@ -588,22 +619,6 @@ bool ValueSet::addValue(const std::string &name, const HsvColor3d &value)
 		return false;
 }
 
-bool ValueSet::addValue(const std::string &name, const ValueSet &value)
-{
-	if (!findValue(name))
-	{
-		TemplateValue<ValueSet>* val = new TemplateValue<ValueSet>;
-		val->_value =value;
-		val->_name = name;
-		val->_type = "ValueSet";
-
-		_values.push_back(val);
-		return true;
-	}
-	else
-		return false;
-}
-
 //set value functions
 bool ValueSet::setValue(const std::string &name, Referenced* value)
 {
@@ -941,18 +956,6 @@ bool ValueSet::setValue(const std::string &name, const HsvColor3d &value)
 		return false;
 }
 
-bool ValueSet::setValue(const std::string &name, const ValueSet &value)
-{
-	Value* val = findValue(name);
-	if (val && val->_type=="ValueSet")
-	{
-		(dynamic_cast<TemplateValue<ValueSet>*>(val))->setValue(value);
-		return true;
-	}
-	else
-		return false;
-}
-
 //get value functions
 bool ValueSet::getValue(const std::string &name, Referenced** value)
 {
@@ -1284,18 +1287,6 @@ bool ValueSet::getValue(const std::string &name, HsvColor3d &value)
 	if (val && val->_type=="HsvColor3d")
 	{
 		value = (dynamic_cast<TemplateValue<HsvColor3d>*>(val))->getValue();
-		return true;
-	}
-	else
-		return false;
-}
-
-bool ValueSet::getValue(const std::string &name, ValueSet &value)
-{
-	Value* val = findValue(name);
-	if (val && val->_type=="ValueSet")
-	{
-		value = (dynamic_cast<TemplateValue<ValueSet>*>(val))->getValue();
 		return true;
 	}
 	else

@@ -8,11 +8,20 @@
 class Observer
 {
 public:
+	typedef std::vector<Referenced*> Observees;
+
 	Observer();
 	virtual ~Observer();
 
 	virtual void objectDeleted(void*) {}
 	virtual void objectChanged(void*, const std::string &exp) {}
+
+	virtual bool removeObservee(Referenced* observee);
+
+	friend Referenced;
+
+protected:
+	Observees _observees;
 };
 
 struct ObserverInfo 

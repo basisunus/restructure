@@ -6,6 +6,25 @@ Observer::Observer()
 
 Observer::~Observer()
 {
+	for (Observees::iterator it=_observees.begin();
+		it!=_observees.end(); ++it)
+	{
+		(*it)->removeObserver(this);
+	}
+}
+
+bool Observer::removeObservee(Referenced* observee)
+{
+	for (Observees::iterator it=_observees.begin();
+		it!=_observees.end(); ++it)
+	{
+		if ((*it) == observee)
+		{
+			_observees.erase(it);
+			return true;
+		}
+	}
+	return false;
 }
 
 ObserverSet::ObserverSet(const Referenced* observedObject):
@@ -31,9 +50,11 @@ void ObserverSet::removeObserver(Observer* observer)
 		itr != _observers.end(); ++itr)
 	{
 		if ((*itr).observer == observer)
+		{
 			_observers.erase(itr);
+			return;
+		}
 	}
-	//_observers.erase(observer);
 }
 
 Referenced* ObserverSet::addRefLock()
@@ -57,7 +78,7 @@ void ObserverSet::signalObjectDeleted(void* ptr)
 	{
 		(*itr).observer->objectDeleted(ptr);
 	}
-
+	_observers.clear();
 	_observedObject = 0;
 }
 

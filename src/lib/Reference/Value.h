@@ -34,6 +34,8 @@ public:
 	inline bool operator == (const Value& v) const;
 	inline bool operator != (const Value& v) const;
 
+	inline bool sync(Value* value);
+
 protected:
 	virtual ~Value();
 
@@ -101,6 +103,11 @@ public:
 	bool addValue(Value* value);
 	bool removeValue(Value* value);
 	bool removeValue(const std::string &name);
+	//reset Referenced pointer to NULL
+	bool resetRefPtr(Referenced* value);
+	//value sync
+	bool syncValue(Value* value);
+
 	//add value functions
 	bool addValue(const std::string &name, Referenced* value=0);
 	bool addValue(const std::string &name, bool value=false);
@@ -130,7 +137,6 @@ public:
 	bool addValue(const std::string &name, const Color3d &value=Color3d());
 	bool addValue(const std::string &name, const HsvColor3f &value=HsvColor3f());
 	bool addValue(const std::string &name, const HsvColor3d &value=HsvColor3d());
-	bool addValue(const std::string &name, const ValueSet &value=ValueSet());
 
 	/** All the set value functions */
 	bool setValue(const std::string &name, Referenced* value);
@@ -161,7 +167,6 @@ public:
 	bool setValue(const std::string &name, const Color3d &value);
 	bool setValue(const std::string &name, const HsvColor3f &value);
 	bool setValue(const std::string &name, const HsvColor3d &value);
-	bool setValue(const std::string &name, const ValueSet &value);
 
 	/** All the get value functions */
 	bool getValue(const std::string &name, Referenced** value);
@@ -192,12 +197,9 @@ public:
 	bool getValue(const std::string &name, Color3d &value);
 	bool getValue(const std::string &name, HsvColor3f &value);
 	bool getValue(const std::string &name, HsvColor3d &value);
-	bool getValue(const std::string &name, ValueSet &value);
 
 	Values& getValues() {return _values;}
 	const Values& getValues() const {return _values;}
-
-	//create, save
 
 protected:
 	virtual ~ValueSet();
@@ -355,17 +357,163 @@ inline bool Value::operator == (const Value& v) const
 		return dynamic_cast<const TemplateValue<HsvColor3d>*>(this)->getValue() ==
 			dynamic_cast<const TemplateValue<HsvColor3d>*>(&v)->getValue();
 	}
-	else if (_type == "ValueSet")
-	{
-		return dynamic_cast<const TemplateValue<ValueSet>*>(this)->getValue() ==
-			dynamic_cast<const TemplateValue<ValueSet>*>(&v)->getValue();
-	}
 	else return false;
 }
 
 inline bool Value::operator != (const Value& v) const
 {
 	return !(*this == v);
+}
+
+inline bool Value::sync(Value* value)
+{
+	if (_type != value->_type ||
+		_name != value->_name)
+		return false;
+
+	if (_type == "Referenced*")
+	{
+		dynamic_cast<TemplateValue<Referenced*>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Referenced*>*>(value)->getValue());
+	}
+	else if (_type == "bool")
+	{
+		dynamic_cast<TemplateValue<bool>*>(this)->setValue(
+			dynamic_cast<TemplateValue<bool>*>(value)->getValue());
+	}
+	else if (_type == "char")
+	{
+		dynamic_cast<TemplateValue<char>*>(this)->setValue(
+			dynamic_cast<TemplateValue<char>*>(value)->getValue());
+	}
+	else if (_type == "unsigned char")
+	{
+		dynamic_cast<TemplateValue<unsigned char>*>(this)->setValue(
+			dynamic_cast<TemplateValue<unsigned char>*>(value)->getValue());
+	}
+	else if (_type == "short")
+	{
+		dynamic_cast<TemplateValue<short>*>(this)->setValue(
+			dynamic_cast<TemplateValue<short>*>(value)->getValue());
+	}
+	else if (_type == "unsigned short")
+	{
+		dynamic_cast<TemplateValue<unsigned short>*>(this)->setValue(
+			dynamic_cast<TemplateValue<unsigned short>*>(value)->getValue());
+	}
+	else if (_type == "long")
+	{
+		dynamic_cast<TemplateValue<long>*>(this)->setValue(
+			dynamic_cast<TemplateValue<long>*>(value)->getValue());
+	}
+	else if (_type == "unsigned long")
+	{
+		dynamic_cast<TemplateValue<unsigned long>*>(this)->setValue(
+			dynamic_cast<TemplateValue<unsigned long>*>(value)->getValue());
+	}
+	else if (_type == "long long")
+	{
+		dynamic_cast<TemplateValue<long long>*>(this)->setValue(
+			dynamic_cast<TemplateValue<long long>*>(value)->getValue());
+	}
+	else if (_type == "unsigned long long")
+	{
+		dynamic_cast<TemplateValue<unsigned long long>*>(this)->setValue(
+			dynamic_cast<TemplateValue<unsigned long long>*>(value)->getValue());
+	}
+	else if (_type == "float")
+	{
+		dynamic_cast<TemplateValue<float>*>(this)->setValue(
+			dynamic_cast<TemplateValue<float>*>(value)->getValue());
+	}
+	else if (_type == "double")
+	{
+		dynamic_cast<TemplateValue<double>*>(this)->setValue(
+			dynamic_cast<TemplateValue<double>*>(value)->getValue());
+	}
+	else if (_type == "string")
+	{
+		dynamic_cast<TemplateValue<std::string>*>(this)->setValue(
+			dynamic_cast<TemplateValue<std::string>*>(value)->getValue());
+	}
+	else if (_type == "Vec2f")
+	{
+		dynamic_cast<TemplateValue<Vec2f>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Vec2f>*>(value)->getValue());
+	}
+	else if (_type == "Vec3f")
+	{
+		dynamic_cast<TemplateValue<Vec3f>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Vec3f>*>(value)->getValue());
+	}
+	else if (_type == "Vec4f")
+	{
+		dynamic_cast<TemplateValue<Vec4f>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Vec4f>*>(value)->getValue());
+	}
+	else if (_type == "Vec2d")
+	{
+		dynamic_cast<TemplateValue<Vec2d>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Vec2d>*>(value)->getValue());
+	}
+	else if (_type == "Vec3d")
+	{
+		dynamic_cast<TemplateValue<Vec3d>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Vec3d>*>(value)->getValue());
+	}
+	else if (_type == "Vec4d")
+	{
+		dynamic_cast<TemplateValue<Vec4d>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Vec4d>*>(value)->getValue());
+	}
+	else if (_type == "Quat")
+	{
+		dynamic_cast<TemplateValue<Quat>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Quat>*>(value)->getValue());
+	}
+	else if (_type == "Planef")
+	{
+		dynamic_cast<TemplateValue<Planef>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Planef>*>(value)->getValue());
+	}
+	else if (_type == "Planed")
+	{
+		dynamic_cast<TemplateValue<Planed>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Planed>*>(value)->getValue());
+	}
+	else if (_type == "Matrixf")
+	{
+		dynamic_cast<TemplateValue<Matrixf>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Matrixf>*>(value)->getValue());
+	}
+	else if (_type == "Matrixd")
+	{
+		dynamic_cast<TemplateValue<Matrixd>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Matrixd>*>(value)->getValue());
+	}
+	else if (_type == "Color3f")
+	{
+		dynamic_cast<TemplateValue<Color3f>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Color3f>*>(value)->getValue());
+	}
+	else if (_type == "Color3d")
+	{
+		dynamic_cast<TemplateValue<Color3d>*>(this)->setValue(
+			dynamic_cast<TemplateValue<Color3d>*>(value)->getValue());
+	}
+	else if (_type == "HsvColor3f")
+	{
+		dynamic_cast<TemplateValue<HsvColor3f>*>(this)->setValue(
+			dynamic_cast<TemplateValue<HsvColor3f>*>(value)->getValue());
+	}
+	else if (_type == "HsvColor3d")
+	{
+		dynamic_cast<TemplateValue<HsvColor3d>*>(this)->setValue(
+			dynamic_cast<TemplateValue<HsvColor3d>*>(value)->getValue());
+	}
+	else return false;
+
+	return true;
 }
 
 inline bool ValueSet::operator == (const ValueSet &vs) const

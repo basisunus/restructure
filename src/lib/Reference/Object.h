@@ -5,9 +5,7 @@
 #include "ref_ptr.h"
 #include "Observer.h"
 #include "Value.h"
-#include <string>
 #include <stack>
-//#include "tinyxml2/tinyxml2.h"
 
 class Vec2f;
 class Vec3f;
@@ -77,7 +75,6 @@ public:
 	virtual bool addValue(const std::string &name, const Color3d &value);
 	virtual bool addValue(const std::string &name, const HsvColor3f &value);
 	virtual bool addValue(const std::string &name, const HsvColor3d &value);
-	virtual bool addValue(const std::string &name, const ValueSet &value);
 
 	/** All the set value functions */
 	virtual bool setValue(const std::string &name, Referenced* value);
@@ -108,7 +105,6 @@ public:
 	virtual bool setValue(const std::string &name, const Color3d &value);
 	virtual bool setValue(const std::string &name, const HsvColor3f &value);
 	virtual bool setValue(const std::string &name, const HsvColor3d &value);
-	virtual bool setValue(const std::string &name, const ValueSet &value);
 
 	/** All the get value functions */
 	virtual bool getValue(const std::string &name, Referenced** value);
@@ -139,9 +135,9 @@ public:
 	virtual bool getValue(const std::string &name, Color3d &value);
 	virtual bool getValue(const std::string &name, HsvColor3f &value);
 	virtual bool getValue(const std::string &name, HsvColor3d &value);
-	virtual bool getValue(const std::string &name, ValueSet &value);
 
-	//bool buildFromXml(tinyxml2::XMLDocument &xml_doc);
+	//sync value
+	virtual bool syncValue(const std::string &name, Observer* obsrvr);
 
 protected:
 	virtual ~Object();

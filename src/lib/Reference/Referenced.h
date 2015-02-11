@@ -1,6 +1,8 @@
 #ifndef FL_REFERENCED
 #define FL_REFERENCED 1
 
+#include <string>
+
 class Observer;
 class ObserverSet;
 
@@ -33,7 +35,9 @@ public:
 
 	void removeObserver(Observer* observer) const;
 
-	virtual const char* className() const = 0;
+	virtual const char* className() const { return "Referenced";}
+
+	const std::string& getRefStr() const { return _refStr; }
 
 protected:
 
@@ -42,6 +46,8 @@ protected:
 	void signalObserversAndDelete(bool signalDelete, bool doDelete) const;
 
 	void notifyObserversOfChange() const;
+
+	std::string _refStr;
 
 	mutable int _refCount;
 

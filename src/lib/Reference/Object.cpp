@@ -1,6 +1,5 @@
 #include "Object.h"
 #include "Value.h"
-#include <iostream>
 
 Object::Object():
   Referenced(),
@@ -29,15 +28,17 @@ void Object::objectDeleted(void* ptr)
 {
 	Referenced* refd = static_cast<Referenced*>(ptr);
 	if (refd->className() == std::string("Object"))
-		return;
-	//	std::cout << /*static_cast<Object*>(refd)->getId() <<*/ " deleted.\n";
+		_vs_stack.top()->resetRefPtr(refd);
+
+	//remove observee
+	removeObservee(refd);
 }
 
 void Object::objectChanged(void* ptr, const std::string &exp)
 {
 	Referenced* refd = static_cast<Referenced*>(ptr);
 	if (refd->className() == std::string("Value"))
-		std::cout << static_cast<Value*>(refd)->getName() << " changed.\n";
+		_vs_stack.top()->syncValue(dynamic_cast<Value*>(refd));
 }
 
 //define function bodies first
@@ -145,9 +146,6 @@ bool Object::addValue(const std::string &name, const HsvColor3f &value)
 bool Object::addValue(const std::string &name, const HsvColor3d &value)
 { OBJECT_ADD_VALUE_BODY }
 
-bool Object::addValue(const std::string &name, const ValueSet &value)
-{ OBJECT_ADD_VALUE_BODY }
-
 //define function bodies first
 //set functions
 #define OBJECT_SET_VALUE_BODY \
@@ -239,9 +237,6 @@ bool Object::setValue(const std::string &name, const HsvColor3f &value)
 { OBJECT_SET_VALUE_BODY }
 
 bool Object::setValue(const std::string &name, const HsvColor3d &value)
-{ OBJECT_SET_VALUE_BODY }
-
-bool Object::setValue(const std::string &name, const ValueSet &value)
 { OBJECT_SET_VALUE_BODY }
 
 //define function bodies first
@@ -337,12 +332,17 @@ bool Object::getValue(const std::string &name, HsvColor3f &value)
 bool Object::getValue(const std::string &name, HsvColor3d &value)
 { OBJECT_GET_VALUE_BODY }
 
-bool Object::getValue(const std::string &name, ValueSet &value)
-{ OBJECT_GET_VALUE_BODY }
-
-//build object
-/*bool Object::buildFromXml(tinyxml2::XMLDocument &xml_doc)
+//sync value
+bool Object::syncValue(const std::string &name, Observer* obsrvr)
 {
-
-	return true;
-}*/
+	if (_vs_stack.top())
+	{
+		Value* value = _vs_stack.top()->findValue(name);
+		if (value)
+		{
+			value->addObserver(obsrvr);
+			return true;
+		}
+	}
+	return false;
+}
