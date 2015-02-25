@@ -346,3 +346,18 @@ bool Object::syncValue(const std::string &name, Observer* obsrvr)
 	}
 	return false;
 }
+
+//unsync value
+bool Object::unsyncValue(const std::string &name, Observer* obsrvr)
+{
+	if (_vs_stack.top())
+	{
+		Value* value = _vs_stack.top()->findValue(name);
+		if (value)
+		{
+			value->removeObserver(obsrvr);
+			return true;
+		}
+	}
+	return false;
+}

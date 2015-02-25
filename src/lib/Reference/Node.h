@@ -18,7 +18,7 @@ public:
 
 	Node();
 
-	Node(const Node&);
+	Node(const Node&, bool ref_copy=false);
 
 	virtual Object* clone() const { return new Node(*this); }
 
@@ -96,7 +96,7 @@ protected:
 	virtual ~Node();
 
 	void addParent(Node* node);
-	void removeParent(Node* ndoe);
+	void removeParent(Node* node);
 
 	//virtual void childRemoved(unsigned int, unsigned int);
 	//virtual void childInserted(unsigned int);

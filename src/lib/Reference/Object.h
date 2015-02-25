@@ -138,6 +138,7 @@ public:
 
 	//sync value
 	virtual bool syncValue(const std::string &name, Observer* obsrvr);
+	virtual bool unsyncValue(const std::string &name, Observer* obsrvr);
 
 protected:
 	virtual ~Object();

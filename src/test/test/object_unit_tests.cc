@@ -49,7 +49,6 @@
 
 using namespace std;
 
-// Tests min/max Angles of regular tet
 TEST(Object, Constructor) {
    //creating first object
    Object *obj1 = new Object();
